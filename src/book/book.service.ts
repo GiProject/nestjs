@@ -1,7 +1,6 @@
-import {Injectable} from '@nestjs/common';
-import {InjectConnection, InjectModel} from '@nestjs/mongoose';
-import {Connection, Model} from 'mongoose';
-
+import { HttpException, Injectable } from '@nestjs/common';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model } from 'mongoose';
 
 import {CreateBookDto} from './interfaces/dto/create.book.dto';
 import {Book, BookDocument} from './book.model';
@@ -32,6 +31,11 @@ export class BookService {
     }
 
     public async deleteBook(id: string): Promise<BookDocument> {
-        return this.BookModel.findOneAndDelete({_id: id});
+        const deleteBook = await this.BookModel.findOneAndDelete({_id: id})
+        if (!deleteBook) {
+            throw new HttpException('document not found', 404);
+        }
+
+        return deleteBook;
     }
 }

@@ -6,12 +6,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BookModule } from './book/book.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGO_CONNECTION),
-    BookModule
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        ConfigModule.forRoot(),
+        MongooseModule.forRoot(process.env.MONGO_CONNECTION),
+        BookModule
+    ],
+    controllers: [AppController],
+    providers: [
+        AppService,
+    ],
 })
-export class AppModule {}
+export class AppModule {
+}
