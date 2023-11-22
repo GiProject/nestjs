@@ -1,6 +1,6 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import {Injectable} from '@nestjs/common';
+import {InjectConnection, InjectModel} from '@nestjs/mongoose';
+import {Connection, Model} from 'mongoose';
 
 import {CreateBookDto} from './interfaces/dto/create.book.dto';
 import {Book, BookDocument} from './book.model';
@@ -8,14 +8,13 @@ import {Book, BookDocument} from './book.model';
 @Injectable()
 export class BookService {
     constructor(
-        @InjectModel(Book.name) private BookModel: Model<BookDocument>,
-        @InjectConnection() private connection: Connection,
+        @InjectModel(Book.name) public BookModel: Model<BookDocument>,
+        // @InjectConnection() private connection: Connection,
     ) {
     }
 
     public async createBook(data: CreateBookDto): Promise<BookDocument> {
-        const book = new this.BookModel(data);
-        return await book.save();
+        return await this.BookModel.create(data);
     }
 
     public async findAll(): Promise<BookDocument[]> {
@@ -31,11 +30,7 @@ export class BookService {
     }
 
     public async deleteBook(id: string): Promise<BookDocument> {
-        const deleteBook = await this.BookModel.findOneAndDelete({_id: id})
-        if (!deleteBook) {
-            throw new HttpException('document not found', 404);
-        }
-
-        return deleteBook;
+        return this.BookModel.findOneAndDelete({_id: id});
     }
 }
+
